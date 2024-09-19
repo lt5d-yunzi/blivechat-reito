@@ -4,6 +4,14 @@
 
 只熊KUMA版的请看 [bear-reito 分支](https://github.com/cnSchwarzer/blivechat-reito/tree/bear-reito)
 
+注：未修补只熊版，需要自行替换构建
+
+需要替换如下文件：
+
+1. requirements.txt
+2. ./utils/request.py 
+3. ./api/login.py 
+
 ## 声明
 
 必须使用小号进行扫码，一个号同一时间只能进入一个直播间。凭据会本地储存，如执意使用大号扫码所造成的一切损失与我无关。
