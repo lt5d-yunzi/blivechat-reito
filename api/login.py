@@ -50,25 +50,29 @@ class KillHandler(api.base.ApiHandler):  # noqa
             del db['cookie']
             del db['date'] 
         utils.request.reload_cookie()
-        self.write({})    
+        self.write({})
 
 
 class StartHandler(api.base.ApiHandler):  # noqa
-    async def get(self):  
-        async with ClientSession(cookies={'appkey': 'aae92bc66f3edfab'}) as session:
-            res = await session.get('https://passport.bilibili.com/x/passport-login/web/qrcode/generate', params={'source': 'live_pc'})
+    async def get(self):
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
+        }
+        async with ClientSession(cookies={'appkey': 'aae92bc66f3edfab'}, headers=headers) as session:
+            res = await session.get('https://passport.bilibili.com/x/passport-login/web/qrcode/generate',
+                                    params={'source': 'live_pc'})
             data = await res.json()
             login_url = data['data']['url']
             qrcode_key = data['data']['qrcode_key']
-            
+
             img = qrcode.make(login_url)
             # Save the image to byte array
             byte_arr = io.BytesIO()
             img.save(byte_arr, format='PNG')
-            byte_arr = byte_arr.getvalue() 
-            
+            byte_arr = byte_arr.getvalue()
+
             b64 = base64.b64encode(byte_arr)
-            
+
             self.write({
                 'qr': b64.decode('utf-8'),
                 'key': qrcode_key
@@ -77,14 +81,18 @@ class StartHandler(api.base.ApiHandler):  # noqa
 
 class CheckHandler(api.base.ApiHandler):  # noqa
     async def get(self):
-        async with ClientSession(cookies={'appkey': 'aae92bc66f3edfab'}) as session:
-            qrcode_key = self.get_query_argument('qrcode_key')  
-            
-            res = await session.get('https://passport.bilibili.com/x/passport-login/web/qrcode/poll', params={'qrcode_key': qrcode_key})
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
+        }
+        async with ClientSession(cookies={'appkey': 'aae92bc66f3edfab'}, headers=headers) as session:
+            qrcode_key = self.get_query_argument('qrcode_key')
+
+            res = await session.get('https://passport.bilibili.com/x/passport-login/web/qrcode/poll',
+                                    params={'qrcode_key': qrcode_key})
             data = await res.json()
-            
-            state = data['data']['code'] 
-            if state == 0: 
+
+            state = data['data']['code']
+            if state == 0:
                 res = await session.get('https://data.bilibili.com/v/')
                 cookies = session.cookie_jar.filter_cookies('https://bilibili.com')
                 with shelve.open('data/login') as db:
@@ -93,8 +101,8 @@ class CheckHandler(api.base.ApiHandler):  # noqa
                 utils.request.reload_cookie()
                 self.write({
                     'ok': True,
-                }) 
-            else: 
+                })
+            else:
                 self.write({
                     'ok': False,
                 })

@@ -5,7 +5,7 @@ import aiohttp
 
 import utils.request
 
-VERSION = 'v1.8.2'
+VERSION = 'v1.8.3'
 
 
 def check_update():
@@ -15,7 +15,7 @@ def check_update():
 async def _do_check_update():
     try:
         async with utils.request.http_session.get(
-            'https://api.github.com/repos/xfgryujk/blivechat/releases/latest'
+            'https://github.com/lt5d-yunzi/blivechat-reito/releases/latest'
         ) as r:
             data = await r.json()
             if data['name'] != VERSION:
