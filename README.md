@@ -6,7 +6,9 @@
 
 注：未修补只熊版，需要自行替换构建
 
-需要替换如下文件：
+blivedm替换为[blivedm](https://github.com/lt5d-yunzi/blivedm)
+
+其他需要替换如下文件：
 
 1. requirements.txt
 2. ./utils/request.py 
