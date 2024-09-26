@@ -4,9 +4,11 @@
 
 只熊KUMA版的请看 [bear-reito 分支](https://github.com/cnSchwarzer/blivechat-reito/tree/bear-reito)
 
+建议自行编译安装
+
 注：未修补只熊版，需要自行替换构建
 
-blivedm替换为[blivedm](https://github.com/lt5d-yunzi/blivedm)
+blivedm替换为[blivedm 修改版](https://github.com/lt5d-yunzi/blivedm)
 
 其他需要替换如下文件：
 
@@ -27,7 +29,11 @@ blivedm替换为[blivedm](https://github.com/lt5d-yunzi/blivedm)
 ## 打包
 
 ```shell
-git clone --recursive https://github.com/cnSchwarzer/blivechat-reito.git -b orig-reito
+git clone https://github.com/lt5d-yunzi/blivechat-reito.git
+
+cd blivechat-reito
+rd /s blivedm
+git clone https://github.com/lt5d-yunzi/blivedm
 
 cd frontend
 npm i
@@ -38,5 +44,6 @@ conda create -n blivechat python=3.9
 pip install -r requirements.txt
 pyinstaller main.py -n blivechat --add-data "data;data" --add-data "log;log" --add-data "frontend/dist;frontend/dist" --hidden-import aiohttp --noconfirm
 ```
+
 
 [原文档](https://github.com/xfgryujk/blivechat/blob/dev/README.md)
